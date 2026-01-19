@@ -87,9 +87,3 @@ class ProfileScreen extends StatelessWidget {
 }
 
 ```
-
-## 📸 Before
-![Crash Screenshot](screenshots/before.png)
-
-## 📸 After
-![Fixed Screenshot](screenshots/after.png)
