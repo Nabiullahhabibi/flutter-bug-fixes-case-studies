@@ -16,6 +16,78 @@ A loading indicator is shown until the data is ready, and fallback values are us
 The profile screen no longer crashes.
 The app now safely handles delayed or missing data and provides a stable user experience.
 
+## Problematic Code
+
+```dart
+import 'package:flutter/material.dart';
+
+class ProfileScreen extends StatelessWidget {
+  final Map<String, dynamic>? userData;
+
+  const ProfileScreen({super.key, this.userData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Profile")),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              userData!['name'], // ❌ CRASH HERE
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 10),
+            Text(userData!['email']), // ❌ CRASH HERE
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+```
+
+
+### Fixed Code Snippet
+```dart
+import 'package:flutter/material.dart';
+
+class ProfileScreen extends StatelessWidget {
+  final Map<String, dynamic>? userData;
+
+  const ProfileScreen({super.key, this.userData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Profile")),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: userData == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userData!['name'] ?? 'Unknown User',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(userData!['email'] ?? 'No email'),
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+```
+
 ## 📸 Before
 ![Crash Screenshot](screenshots/before.png)
 
